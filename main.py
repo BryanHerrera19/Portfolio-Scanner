@@ -1,6 +1,5 @@
-#Bryan Herrera, Bryant Tran
-#COMP_141 Group 15
-#Project Phase 1.1
+#Bryan Herrera & Bryant Tran
+#COMP_141 Project Phase 1.2 Group 15
 
 import sys
 import re
@@ -20,7 +19,8 @@ def scanner(line):
   words = line.split()
   identifier = re.compile(r'^([a-z]|[A-Z])([a-z]|[A-Z]|[0-9])*')
   number = re.compile(r'^[0-9]+')
-  symbol = re.compile(r'\+|\-|\*|/|\(|\)')
+  symbol = re.compile(r'\+|\-|\*|/|\(|\)|:=|;')
+  keyword = re.compile(r'if|then|else|endif|while|do|endwhile|skip')
 
   tokens = []
   for word in words:
@@ -30,7 +30,10 @@ def scanner(line):
 
       for j in range (i, len(word)):
 
-        if identifier.fullmatch(word[i : j + 1]) != None:
+        if keyword.fullmatch(word[i : j + 1]) != None:
+          longesttoken = (Token("KEYWORD", word[i : j + 1]))
+
+        elif identifier.fullmatch(word[i : j + 1]) != None:
           longesttoken = (Token("IDENTIFIER" , word[i : j + 1]))
       
         elif number.fullmatch(word[i : j + 1]) != None:
@@ -61,9 +64,9 @@ def main():
 
   with open(fileIn, 'r') as fIn, open(fileOut, 'w') as fOut:  #Opens input file to read
     for line in fIn:  #Iterate thorugh input file line by line
-      line = line.strip()
       print("Line: " + line)
       fOut.write("Line: " + line + "\n")  #Writes current line to be scanned to output file
+      line = line.strip()
 
       tokenList = scanner(line)
       for token in tokenList:
